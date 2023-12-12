@@ -48,7 +48,11 @@ RSpec.describe Dmv do
 
   describe '#register_vehicle' do
     it 'will not register if facility does not offer Vehicle Registration service' do 
-      expect(@facility_1.register_vehicle(@cruz)).to eq "This facility does not offer that service"
+      expect(@facility_2.registered_vehicles).to eq []
+      expect(@facility_2.services).to eq []
+      expect(@facility_2.register_vehicle(@bolt)).to eq "This facility does not offer that service"
+      expect(@facility_2.registered_vehicles).to eq []
+      expect(@facility_2.collected_fees).to eq 0
     end
 
     it 'can track registration date' do

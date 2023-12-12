@@ -25,7 +25,7 @@ class Facility
       add_to_registered_vehicles(vehicle)
     end
   end
-
+  
   def set_registration_date(vehicle)
     today = Date.today
     formatted_date = today.strftime("%Y-%d-%m")
@@ -51,23 +51,31 @@ class Facility
       @collected_fees += 100
     end
   end
-
+  
   def add_to_registered_vehicles(vehicle)
     registered_vehicles << vehicle
   end
-
-
-
-  def administer_written_test
-    #registrant with permit and 16 y/o
+  
+  
+  
+  def administer_written_test(registrant)
+    if !@services.include?('Written Test')
+      "This facility does not offer that service"
+    else
+      if registrant.permit? == true and registrant.age >= 16
+      registrant.license_data[:written] = true
+      else
+        "Unable to take written test"
+      end
+    end
   end
 
-  def administer_road_test 
-    #registrant must pass the written test
-    #registrant who qualify earn a license
-  end
+  # def administer_road_test 
+  #   #registrant must pass the written test
+  #   #registrant who qualify earn a license
+  # end
 
-  def renew_license 
-    #can only be renewed if registrant has passed road_test and earned a license
-  end
+  # def renew_license 
+  #   #can only be renewed if registrant has passed road_test and earned a license
+  # end
 end
