@@ -36,7 +36,7 @@ RSpec.describe Registrant do
     end
 
     describe 'written test' do
-        it 'will change written status to true if facility offers the service, registrant is of age and has permit' do 
+        it '#administer_written_test will change written status to true if facility offers the service, registrant is of age and has permit' do 
             @facility_1.add_service('Written Test')
             @facility_1.administer_written_test(@registrant_1)
             expected = {
@@ -85,6 +85,36 @@ RSpec.describe Registrant do
     end
 
     describe 'road test' do
+        it '#administer_road_test will change license data to true if registrant has passed written test' do 
+            @facility_1.add_service('Written Test')
+            @facility_1.add_service('Road Test')
+            @facility_1.administer_written_test(@registrant_1)
+            @facility_1.administer_road_test(@registrant_1)
+            expected = {
+                :written => true,
+                :license => true,
+                :renewed => false
+            }
+            
+            expect(@registrant_1.license_data).to eq expected 
+        end
         
+        context 'sad path' do
+            it 'will not #administer_road_test if facility does not offer the road test service' do 
+                expect(@facility_1.administer_road_test(@registrant_1)).to eq "This facility does not offer that service"
+            end
+        
+            it 'will not #administer_road_test if registrant did not yet pass the written test' do 
+                @facility_1.add_service('Road Test')
+                expected = {
+                    :written => false,
+                    :license => false,
+                    :renewed => false
+                }
+                
+                expect(@facility_1.administer_road_test(@registrant_1)).to eq "Must pass written test first"
+                expect(@registrant_1.license_data).to eq expected 
+            end 
+        end
     end
 end
