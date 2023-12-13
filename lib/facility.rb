@@ -71,11 +71,18 @@ class Facility
       end
     end
   end
-
-  # def administer_road_test 
-  #   #registrant must pass the written test
-  #   #registrant who qualify earn a license
-  # end
+  
+  def administer_road_test(registrant)
+    if !@services.include?('Road Test')
+      "This facility does not offer that service"
+    else
+      if registrant.license_data[:written] == false 
+        "Must pass written test first"
+      else
+        registrant.license_data[:license] = true
+      end
+    end
+  end
 
   # def renew_license 
   #   #can only be renewed if registrant has passed road_test and earned a license
