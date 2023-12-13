@@ -103,7 +103,7 @@ RSpec.describe Registrant do
             it 'will not #administer_road_test if facility does not offer the road test service' do 
                 expect(@facility_1.administer_road_test(@registrant_1)).to eq "This facility does not offer that service"
             end
-        
+            
             it 'will not #administer_road_test if registrant did not yet pass the written test' do 
                 @facility_1.add_service('Road Test')
                 expected = {
@@ -115,6 +115,35 @@ RSpec.describe Registrant do
                 expect(@facility_1.administer_road_test(@registrant_1)).to eq "Must pass written test first"
                 expect(@registrant_1.license_data).to eq expected 
             end 
+        end
+    end
+
+    describe 'renew license' do 
+        it 'can #renew_drivers_license for a given registrant' do 
+            @facility_1.add_service('Written Test')
+            @facility_1.add_service('Road Test')
+            @facility_1.add_service('Renew License')
+            @facility_1.administer_written_test(@registrant_1)
+            @facility_1.administer_road_test(@registrant_1)
+            @facility_1.renew_drivers_license(@registrant_1)
+            expected = {
+                :written => true,
+                :license => true,
+                :renewed => true
+            }
+            
+            expect(@registrant_1.license_data).to eq expected
+        end
+
+        context 'sad path' do 
+            it 'will not #renew_drivers_license if facility does not offer the renew license service' do
+                expect(@facility_1.renew_drivers_license(@registrant_1)).to eq "This facility does not offer that service"
+            end
+
+            it 'will not #renew_drivers_license if registrant does have their license' do 
+                @facility_1.add_service('Renew License')
+                expect(@facility_1.renew_drivers_license(@registrant_1)).to eq "Registrant does not have a drivers license"
+            end
         end
     end
 end

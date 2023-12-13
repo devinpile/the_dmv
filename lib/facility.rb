@@ -83,8 +83,14 @@ class Facility
       end
     end
   end
-
-  # def renew_license 
-  #   #can only be renewed if registrant has passed road_test and earned a license
-  # end
+  
+  def renew_drivers_license(registrant) 
+    if !@services.include?('Renew License')
+      "This facility does not offer that service"
+    elsif registrant.license_data[:license] == false 
+      "Registrant does not have a drivers license"
+    else 
+      registrant.license_data[:renewed] = true
+    end
+  end
 end
