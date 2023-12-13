@@ -61,11 +61,13 @@ class Facility
   def administer_written_test(registrant)
     if !@services.include?('Written Test')
       "This facility does not offer that service"
+    elsif registrant.permit? == false 
+      "Registrant does not have a permit"
+    elsif registrant.age < 16 
+      "Registrant is not old enough to take written test"
     else
       if registrant.permit? == true and registrant.age >= 16
-      registrant.license_data[:written] = true
-      else
-        "Unable to take written test"
+        registrant.license_data[:written] = true
       end
     end
   end
